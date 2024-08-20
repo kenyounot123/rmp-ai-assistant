@@ -1,11 +1,10 @@
 import puppeteer from 'puppeteer';
 
-// Launch the browser and open a new blank page
+// Scrape all reviews of a professor and store it as a Review object in future implementation.
 export default async function scraper(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   
-  // Navigate the page to a URL.
   await page.goto(url);
 
   await page.setViewport({width: 1080, height: 1024});

@@ -1,5 +1,4 @@
 import { Pinecone } from '@pinecone-database/pinecone';
-import { listIndexes } from '@pinecone-database/pinecone/dist/control';
 
 interface MetaData {
   profName: string,
@@ -23,15 +22,14 @@ export async function ensurePineconeIndex() {
       const indexExists = existingIndexes.indexes.some(index => index.name === 'rmp-data');
       // Check if 'rmp-data' already exists
       if (indexExists) {
-        console.log('Index already exists.');
-        return pc.index('rmp-data'); // Return the existing index
+        return // If it already exists then we can exit and continue to inserting data into this index
       }
 
       // If index does not exist, create it
       await pc.createIndex({
         name: 'rmp-data',
-        dimension: 1536, // Replace with your model dimensions
-        metric: 'cosine', // Replace with your model metric
+        dimension: 1536,
+        metric: 'cosine',
         spec: { 
           serverless: { 
             cloud: 'aws', 
@@ -40,13 +38,13 @@ export async function ensurePineconeIndex() {
         } 
       });
     }
-    console.log('Index created successfully.');
   } catch (error) {
     console.error("Error ensuring Pinecone index exists: ", error);
   }
 }
 
-// Insert Data into Pinecone
+// Insert Data into Pinecone Index ( Might change it so that in the future, the specific index is
+// passed in as parameters as well, but for now we only have 1 index)
 export async function insertDataIntoPinecone(embedding: number[], metadata: MetaData) {
   try {
     const index = pc.Index('rmp-data');
