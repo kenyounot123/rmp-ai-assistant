@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 
-export default function ClientChatBot() {
+export default function ClientChatBot({
+  submitHandler,
+}: {
+  submitHandler: any;
+}) {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,8 +17,8 @@ export default function ClientChatBot() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle the chat bot submission logic
-    console.log("Submitted:", inputValue);
     setInputValue("");
+    submitHandler(inputValue);
   };
 
   return (
