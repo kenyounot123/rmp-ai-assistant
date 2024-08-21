@@ -7,20 +7,56 @@ import {
   Stack,
   Box,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function School() {
   const router = useRouter();
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`/school/${userInput}`);
+    setLoading(true)
+    if (!userInput) {
+      return
+    }
+  
+    try {
+      const response = await fetch('/api/scrape', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: userInput }), // Convert object to JSON string
+      });
+      
+      const result = await response.json(); // Parse the response JSON
+      
+      if (response.ok) {
+        // Send data to temporary storage
+        await fetch('/api/store-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(result),
+        });
+        router.push('/school/result');
+      } else {
+        console.error('Error:', result.error); // Handle error response
+      }
+    } catch (error) {
+      console.error('Error fetching scrape data:', error);
+    } finally {
+      setLoading(false)
+    }
+
   };
 
   return (
@@ -56,8 +92,9 @@ export default function School() {
                 }}
                 variant="contained"
                 type="submit"
+                disabled={loading}
               >
-                Submit
+                {loading ? <CircularProgress/> : "Submit"}
               </Button>
             </Box>
           </Stack>
