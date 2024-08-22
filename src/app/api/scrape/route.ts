@@ -11,7 +11,8 @@ interface ScrapedData {
   profDifficulty: string
   numOfRatings: string,
   profDepartment: string
-  profSchool: string
+  profSchool: string,
+  profReviews: string[]
 }
 
 export async function POST(req:Request) {
@@ -30,6 +31,7 @@ export async function POST(req:Request) {
     // scrape data 
     const data = await scraper(url) as ScrapedData; 
     // create embeddings using scraped data
+    console.log(data)
     const embeddings = await createEmbeddings(data)
     
     // after getting scraped data, insert it into the database
@@ -40,6 +42,7 @@ export async function POST(req:Request) {
       numOfRatings: data.numOfRatings,
       profDepartment: data.profDepartment,
       profSchool: data.profSchool,
+      profReviews: data.profReviews
     };
     await insertDataIntoPinecone(embeddings, metadata);
     return NextResponse.json({ data });
