@@ -54,6 +54,7 @@ export async function insertDataIntoPinecone(embedding: number[], metadata: Meta
       id: metadata.profName, // Create a unique ID for each embedding
       values: embedding,
       metadata: {
+        profName: metadata.profName,
         profRatingValue: metadata.profRatingValue,
         profDifficulty: metadata.profDifficulty,
         numOfRatings: metadata.numOfRatings,

@@ -15,6 +15,7 @@ export default async function scraper(url) {
   const numOfRatings = await scrapeNumberOfRatings(page) || null
   const department = await scrapeDepartment(page) || null
   const school = await scrapeSchool(page) || null
+  const reviews = await scrapeReviews(page) || null
 
   await browser.close();
   const scrapedData = {
@@ -24,7 +25,8 @@ export default async function scraper(url) {
     // this might be changed to a review object containing number of views and the actual reviews of students
     numOfRatings: numOfRatings,
     profDepartment: department,
-    profSchool: school
+    profSchool: school,
+    profReviews: reviews,
   }
   return scrapedData
 }  
@@ -96,4 +98,15 @@ const scrapeSchool = async (page) => {
     return links.length > 1 ? links[1].textContent.trim() : '';
   });
   return school
+}
+const scrapeReviews = async (page) => {
+  const reviewSelector = '.Comments__StyledComments-dzzyvm-0.gRjWel';
+  await page.waitForSelector(reviewSelector);
+  const reviews = await page.$$eval(reviewSelector, (reviewDivs) => {
+    return reviewDivs
+      .map((div) => div.textContent.trim()) // Get text content and trim whitespace
+      .filter(content => content !== 'No Comments'); // Filter out "No Comments"
+  });
+  
+  return reviews;
 }
