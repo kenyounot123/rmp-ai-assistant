@@ -9,6 +9,7 @@ export default function ClientChatBot({
   submitHandler: any;
 }) {
   const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

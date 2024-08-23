@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
   const index = pc.index("rmp-data")
   
   const queryEmbedding = createdQueryEmbedding.data[0].embedding
-  console.log('created embedding: ', queryEmbedding)
 
   // Get similarities
   const mostSimilarMatches = await index.query({
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
   const metadataList = mostSimilarMatches.matches.map((match: any) => {
     return match.metadata;
   })
-  console.log('most similar matches: ', metadataList)
   const formattedMetadataList = metadataList.map((metadata: any) => formatMetadata(metadata)).join("\n\n-------\n\n");
 
   const augmentedQuery = `
@@ -51,7 +49,6 @@ export async function POST(req: NextRequest) {
   -------
   MY QUESTION:\n${latestMessage.content}
   `;
-  console.log(augmentedQuery)
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
