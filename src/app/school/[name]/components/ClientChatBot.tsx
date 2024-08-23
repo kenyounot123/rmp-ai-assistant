@@ -17,7 +17,6 @@ export default function ClientChatBot({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle the chat bot submission logic
     setInputValue("");
     submitHandler(inputValue);
   };

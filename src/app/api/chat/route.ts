@@ -50,6 +50,8 @@ export async function POST(req: NextRequest) {
   MY QUESTION:\n${latestMessage.content}
   `;
 
+  console.log(augmentedQuery)
+
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
